@@ -1,0 +1,70 @@
+.subslide{
+	color: blue;
+	background-color: green;
+}
+
+.emph{
+  background-color: rgb(0,230,255);
+  border-radius: 15px;
+  box-shadow: 10px 10px 5px #888888;
+  border-style: solid;
+  border-top-style: dotted;
+  vertical-align:middle;
+  transition-property: width;
+}
+
+.emph2{
+  background-color: rgb(230,0,50);
+  color: "white";
+  border-radius: 25px;
+  box-shadow: 10px 10px 5px #888888;
+  border-style: solid;
+  border-top-style: dotted;
+  transition-property: width;
+}
+
+.lessonPage .lessonsNav a.current {
+  background-color: "blue";
+  color: #fff;
+}
+
+.scroll_div{
+  overflow-y: scroll; 
+  align: "center";
+  border:1px solid #ccc;
+}
+
+.zoom{
+	position: absolute;
+	width:0px;
+	-webkit-transition:width 0.3s linear 0s;
+	transition:width 0.3s linear 0s;
+	z-index:10;
+}
+
+.gdbar img {
+  width: 200px !important;
+  height: 93px !important;
+  margin: 0px 0px;
+}
+
+.bluefont{
+  color: blue;
+}
+
+slides > slide.dark {
+  background: rgb(200,200,200) !important;
+  font-style: "bluefont";
+}
+
+slides > slide.dark2 {
+  background: blue !important;
+}
+
+box_style {
+    width: 300px;
+    border: 25px solid green;
+    padding: 25px;
+    margin: 25px;
+    background: green;
+}

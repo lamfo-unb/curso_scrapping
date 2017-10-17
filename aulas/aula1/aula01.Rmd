@@ -1,0 +1,71 @@
+---
+title: Scraping (força bruta)
+header-includes: \usepackage{graphicx}
+author: "Igor F. Nascimento"
+date: "17 de outubro de 2017"
+output:
+  beamer_presentation:
+    fig_width: 7
+    fig_height: 6
+    fig_caption: true
+  pdf_document:
+    keep_tex: true
+---
+
+
+# Scraping
+
+
+## Introdução {.flexbox .vcenter}
+
+[Data scraping (do inglês, raspagem de dados) é uma técnica computacional na qual um programa extrai dados de saída legível somente para humanos, proveniente de um serviço ou aplicativo](https://pt.wikipedia.org/wiki/Screen_scraping).
+
+## Sites {.flexbox .vcenter}
+
+
+ - [Transfermarkt](https://www.transfermarkt.com/spielbericht/index/spielbericht/1028929)
+ - [FIFA](https://www.fifaindex.com/pt-br/)
+ - [CS](https://www.hltv.org/stats)
+ 
+ 
+## Pacotes {.flexbox .vcenter}
+
+ 
+```{r docfunction, eval = F}
+
+library(RCurl)
+library(data.table)
+library(gsubfn)
+library(stringr)
+
+```
+
+## Funções {.flexbox .vcenter}
+
+ 
+```{r funcs, eval = F}
+
+getURL
+strapplyc
+gsub
+unlist
+strsplit
+
+```
+
+
+## Expressão regular {.flexbox .vcenter}
+
+## Tipo de objeto {.flexbox .vcenter}
+
+## getURL {.flexbox .vcenter}
+
+## gsub {.flexbox .vcenter}
+
+## strapplyc {.flexbox .vcenter}
+
+## unlist {.flexbox .vcenter}
+
+## strsplit {.flexbox .vcenter}
+
+
