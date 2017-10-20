@@ -1,0 +1,4 @@
+## Curso: Scraping brute force
+## Aula:  1
+## Data: 21/10/2017
+## Instrutor: Igor

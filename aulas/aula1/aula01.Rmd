@@ -45,9 +45,9 @@ library(stringr)
  
 ```{r funcs, eval = F}
 
+gsub
 getURL
 strapplyc
-gsub
 unlist
 strsplit
 
@@ -56,11 +56,56 @@ strsplit
 
 ## Expressão regular {.flexbox .vcenter}
 
+
+[Uma expressão regular é uma notação para representar padrões em strings. Serve para validar entradas de dados ou fazer busca e extração de informações em textos.](http://turing.com.br/material/regex/introducao.html)
+
+
+## Expressão regular - sintaxe {.flexbox .vcenter}
+
+- d
+
+
+
+
+## gsub {.flexbox .vcenter}
+
+A função *gsub* substitui um determinado **padrão** de texto por outro **padrão** em um texto ou vetor.
+  - **pattern**: padrão procurado
+  - **replacement**: padrão substituto
+  - **x**: objeto com os valores a serem procurados e substituídos
+  - **ignore.case**: *case sensitive*
+
+
+## gsub - entrada fixa {.flexbox .vcenter}
+
+```{r gsub1, eval = F}
+
+texto <- "eu amo python"
+gsub("Python","R",texto,ignore.case = T)
+
+
+
+```
+
+
+## gsub - entrada variável {.flexbox .vcenter}
+
+```{r gsub2, eval = F}
+
+texto <- "eu amo SAS"
+gsub("(eu amo ).*","\\1R",texto,ignore.case = T)
+
+
+
+```
+
+
+
+
+
 ## Tipo de objeto {.flexbox .vcenter}
 
 ## getURL {.flexbox .vcenter}
-
-## gsub {.flexbox .vcenter}
 
 ## strapplyc {.flexbox .vcenter}
 
