@@ -13,6 +13,24 @@ output:
 ---
 
 
+
+```{r exec,include  = FALSE, eval = FALSE}
+## diretório onde está este script
+arquivo <- rstudioapi::getActiveDocumentContext()$path
+arquivo <- iconv(arquivo,from = "utf8",to = "latin1")
+dir_script <- dirname(arquivo)
+
+nome_arquivo <- file.path(dir_script,paste0("script_",
+                            gsub(pattern = "Rmd",
+                                 replacement = "R",
+                                 basename(arquivo))))
+
+knitr::purl(input = arquivo,
+            output = nome_arquivo,
+            documentation = 1)
+```
+
+
 # Scraping
 
 
@@ -23,7 +41,7 @@ output:
 ## Sites {.flexbox .vcenter}
 
 
- - [Transfermarkt](https://www.transfermarkt.com/spielbericht/index/spielbericht/1028929)
+ - [Transfermarkt](https://www.transfermarkt.com/premier-league/spieltagtabelle/wettbewerb/GB1/saison_id/2010)
  - [FIFA](https://www.fifaindex.com/pt-br/)
  - [CS](https://www.hltv.org/stats)
  
@@ -37,15 +55,17 @@ library(RCurl)
 library(data.table)
 library(gsubfn)
 library(stringr)
+library(rvest)
 
 ```
 
 ## Funções {.flexbox .vcenter}
 
  
-```{r funcs, eval = F}
+```{r funcs, eval = F,echo=T}
 
 gsub
+grep
 getURL
 strapplyc
 unlist
@@ -60,16 +80,74 @@ strsplit
 [Uma expressão regular é uma notação para representar padrões em strings. Serve para validar entradas de dados ou fazer busca e extração de informações em textos.](http://turing.com.br/material/regex/introducao.html)
 
 
-## Expressão regular - sintaxe {.flexbox .vcenter}
+## Expressão regular - sintaxe {.flexbox .vcenter .smaller}
 
-- d
+ - \\\\d: dígito (0,1,...9)
+ - \\\\D: não dígito 
+ - \\\\w: letra
+ - \\\\W: não letra
+ - \\\\s: espaço
+ - \\\\S: não espaço
+ - ^: início do texto
+ - $: fim do texto
+ - .: qualquer caracter
+ - \\[ ab \\]: conjunto a ou b
+ - \\[ ^ab \\]: exceto a ou b
+ - \\[ A-Z \\]: letras maiúsculas
+ - i+: i pelo menos 1 vez
+ - i*: i zero ou mais vezes
+ - i?: i zero ou 1 vez
+ - i{n}: i n vezes
+ - i{n,}: i pelo menos 1 vez
+ - i{n,m}: i pelo menos n e não mais que m
 
+
+
+
+## Expressão regular - exercício {.flexbox .vcenter .smaller}
+
+
+ - cpf: 123.456.789-00
+ - telefone: (61) 98765-4321
+ - telefone: (61) 8765-4321
+ - telefone geral: com e sem 9
+ 
+## grep {.flexbox .vcenter}
+
+
+Procura e retorna a posição (vetor) ou objeto em um padrão a ser procurado em um texto.
+
+
+  - **pattern**: padrão procurado
+  - **x**: objeto com os valores a serem procurados e substituídos
+  - **value**: 
+
+## grep entrada fixa {.flexbox .vcenter}
+
+```{r grep1, eval = T, echo=TRUE}
+
+texto <- c("eu amo R","eu amo LAMFO","eu odeio SVM")
+grep("eu amo",texto)
+grep("eu amo",texto,value = T)
+
+```
+
+## grep entrada variavel {.flexbox .vcenter}
+
+```{r grep2, eval =T, echo=T}
+
+texto <- c("eu amo R","eu amo LAMFO","eu odeio SVM","eu detesto estatística")
+grep("eu\\s(amo|odeio)",texto,value=T)
+grep("eu\\s\\w*\\s\\w*",texto,value = T)
+
+```
 
 
 
 ## gsub {.flexbox .vcenter}
 
 A função *gsub* substitui um determinado **padrão** de texto por outro **padrão** em um texto ou vetor.
+
   - **pattern**: padrão procurado
   - **replacement**: padrão substituto
   - **x**: objeto com os valores a serem procurados e substituídos
@@ -78,7 +156,7 @@ A função *gsub* substitui um determinado **padrão** de texto por outro **padr
 
 ## gsub - entrada fixa {.flexbox .vcenter}
 
-```{r gsub1, eval = F}
+```{r gsub1, eval =T, echo=T}
 
 texto <- "eu amo python"
 gsub("Python","R",texto,ignore.case = T)
@@ -90,27 +168,144 @@ gsub("Python","R",texto,ignore.case = T)
 
 ## gsub - entrada variável {.flexbox .vcenter}
 
-```{r gsub2, eval = F}
+ - tudo entre parêntes permanece
 
-texto <- "eu amo SAS"
+```{r gsub2, eval =T, echo=T}
+
+texto <- c("eu amo R","eu amo LAMFO","eu odeio SVM","eu detesto estatística")
 gsub("(eu amo ).*","\\1R",texto,ignore.case = T)
 
 
 
 ```
 
+## gsub - entrada variável multivariada {.flexbox .vcenter}
+
+```{r gsub3, eval =T, echo=T}
+
+texto <- "eu amo SAS e não gosto de R"
+gsub("(eu amo )[a-z]*( e não gosto de )[a-z]*","\\1R\\2SAS",texto,ignore.case = T)
 
 
 
+```
 
-## Tipo de objeto {.flexbox .vcenter}
 
-## getURL {.flexbox .vcenter}
+## gsub - desafio {.flexbox .vcenter}
+
+Transforme o nome "Pedro Henrique de Melo Albuquerque" em padrão de citação.
+
+
+
+```{r gsub4, eval = T,echo=F}
+## padrão de citação 
+texto <- c("Pedro Henrique de Melo Albuquerque")
+rtexto <- gsub("(\\w{1})\\w*\\s+","\\1. ",texto,ignore.case = T)
+texto <- gsub("(\\w{1})\\w*\\s+","\\1. ",texto,ignore.case = T)
+gsub("(.*\\.)\\s(\\w{2,}$)","\\2, \\1",
+              texto,ignore.case = T)
+```
+
+```{r gsub5, eval = F,echo=F}
+## ignorando de ou do
+texto <- c("Pedro Henrique de Melo Albuquerque",
+           "Peng do Nascimento")
+gsub("([^((de|do)\\s)])\\w*\\s+","\\1. ",texto,ignore.case = T,perl = T)
+
+```
+
 
 ## strapplyc {.flexbox .vcenter}
 
-## unlist {.flexbox .vcenter}
+
+Encontra todos os casos com um padrão em um texto
+
+  - **X**: objeto com os valores a serem procurados e substituídos
+  - **pattern**: padrão procurado
+  - **simplify**: "c" simplifica o objeto para um único vetor
+  - **ignore.case**: *case sensitive*
+  
+
+## strapplyc exemplo 1{.flexbox .vcenter}
+
+
+```{r strapplyc1, eval = T,echo=T}
+library(gsubfn)
+strapply(c("12;34:56","12,23,34.54:56,89,,12","12.12.12"), "[0-9]+")
+strapply(c("12;34:56","12,23,34.54:56,89,,12","12.12.12"), "[0-9]+", simplify = c)
+```
+
 
 ## strsplit {.flexbox .vcenter}
+
+
+Divide todos os casos entre um padrão em um texto
+
+  - **X**: objeto com os valores a serem procurados e substituídos
+  - **split**: padrão procurado
+  - **simplify**: "c" simplifica o objeto para um único vetor
+  - **ignore.case**: *case sensitive*
+
+
+## strsplit exempplo 1{.flexbox .vcenter}
+
+```{r strsplit1, eval = T,echo=T}
+strsplit(c("12.34.56"), "\\.")
+```
+
+
+## getURL {.flexbox .vcenter}
+
+Lendo código fonte do html de um página
+
+  - url: link página
+  - ssl.verifyhost=FALSE
+  - ssl.verifypeer=FALSE
+  
+Função "url.exists" antes 
+
+Retora 1 objeto caracter
+
+
+## getURL exemplo {.flexbox .vcenter}
+
+
+```{r getURL1, eval = F,echo=T}
+    link <- "https://www.fifaindex.com/pt-br/"
+    html <- getURL(link,
+                    ssl.verifyhost=FALSE, ssl.verifypeer=FALSE)
+    html <- unlist(strsplit(html,"\\n"))
+    
+```
+
+## read_html {.flexbox .vcenter}
+
+Lendo código fonte do html de um página
+
+  - x: link página
+  
+Função "url.exists" antes 
+
+Retora um vetor (linha a linha) de caracteres
+
+## read_html exemplo {.flexbox .vcenter}
+
+
+```{r read_html1, eval = F,echo=T}
+    link <- "https://www.transfermarkt.com/premier-league/spieltagtabelle/wettbewerb/GB1/saison_id/2010"
+    html <- read_html(link, encoding = "UTF-8")
+    html <- htmlParse(html)
+    html <- capture.output(html)
+```
+
+
+                    
+
+
+
+    
+    
+
+
 
 
